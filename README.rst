@@ -17,7 +17,7 @@ TODO
 
 Contributing
 ------------
-See CONTRIBUTING.md
+See CONTRIBUTING.rst
 
 
 Examples
