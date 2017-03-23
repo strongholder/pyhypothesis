@@ -6,3 +6,6 @@
 .cache/
 .Python
 *.*~
+build/
+dist/
+pyhypothesis.egg-info/
