@@ -1,0 +1,8 @@
+.DS_Store
+*.py[cod]
+*.pid
+*.swp
+.idea/
+.cache/
+.Python
+*.*~
