@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='pyhypothesis',
-      version='1.0.0',
+      version='1.0.1',
       description='The funniest joke in the world',
       url='https://github.com/strongholder/pyhypothesis',
       author='Daniel Popov',

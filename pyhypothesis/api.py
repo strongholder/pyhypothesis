@@ -4,7 +4,7 @@ pyhypothesis is a simple API client for hypothes.is
 
 __author__      = "Daniel Popov"
 __license__ = "MIT"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __credits__ = ["Daniel Popov"]
 
 import requests
@@ -22,7 +22,7 @@ class HypoClient(object):
         headers = {
             "Authorization": "Bearer %s" % self._api_key,
             "Accept": "application/json",
-            'user-agent': 'pyhypothesis/1.0.0'
+            'user-agent': 'pyhypothesis/%s' % __version__
         }
 
         return headers
@@ -41,9 +41,6 @@ class HypoClient(object):
             call_kwargs["headers"] = headers
 
         request_method = getattr(requests, method_name)
-
-        import pprint
-        pprint.pprint(call_kwargs)
 
         r = request_method("%s%s" % (self.ApiUrl, url), **call_kwargs)
         response = r.json()
