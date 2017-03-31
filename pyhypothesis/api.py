@@ -47,6 +47,16 @@ class HypoClient(object):
 
         return response
 
+    def get_number_of_chunks(self, total, limit):
+        if total <= limit:
+            number_of_chunks = 1
+        elif total % limit > 0:
+            number_of_chunks = (total / limit) + 1
+        else:
+            number_of_chunks = total / limit
+
+        return number_of_chunks
+
     def search_annotations(self, **kwargs):
         """
 
@@ -66,12 +76,12 @@ class HypoClient(object):
         url = kwargs.get("url")
         group = kwargs.get("group")  # group code (not name, e.g. 4PvgDpPS)
 
-        limit = kwargs.get("limit", 20)
+        limit = kwargs.get("limit", 200)
         offset = kwargs.get("offset", 0)
         sort = kwargs.get("sort", "updated")
         order = kwargs.get("order", "desc")
         any = kwargs.get("any", None)
-
+        fetch_all = kwargs.get("fetch_all", None)
 
         payload = {}
 
@@ -90,12 +100,30 @@ class HypoClient(object):
         if any:
             payload["any"] = any
 
+        if limit > 200:
+            # the api only allows up to 200 records per request
+            limit = 200
+
         payload["limit"] = limit
         payload["offset"] = offset
         payload["sort"] = sort
         payload["order"] = order
 
-        response = self.make_request("/search", payload=payload)
+        if fetch_all:
+            response = self.make_request("/search", payload=payload)
+            total = response.get("total", 0)
+            number_of_chunks = self.get_number_of_chunks(total, limit)
+            chunks = [[(x * limit), x * limit + limit] for x in range(number_of_chunks)][1:]
+
+            for chunk in chunks:
+                payload["offset"] = chunk[0]
+                payload["limit"] = limit
+
+                resp = self.make_request("/search", payload=payload)
+                response["rows"] += resp["rows"]
+
+        else:
+            response = self.make_request("/search", payload=payload)
 
         return response
 
